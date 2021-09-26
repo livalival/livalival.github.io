@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Are you a winner?</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <main class="container">
+      <h1 class="display-1">Biofit Survey</h1>
+
+      <br />
+
+      <form id="my-form" action="https://formspree.io/f/xjvjlqao" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Survey Question 1 Here*</label>
+          <input required class="form-control" type="text" name="question1" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Survey Question 2 Here*</label>
+          <input required class="form-control" type="text" name="question2" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Survey Question 3 Here*</label>
+          <input required class="form-control" type="text" name="question3" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <input class="form-control" type="email" name="email" />
+        </div>
+        <button class="btn btn-primary" id="my-form-button">
+          <span
+            class="spinner-grow spinner-grow-sm d-none"
+            id="my-form-spinner"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Submit to win
+        </button>
+        <p class="fs-5" id="my-form-status"></p>
+        <a class="link-primary d-none" id="my-form-link" href="#" target="_blank">
+            Please click here to claim your prize!
+        </a>
+        </div>
+      </form>
+    </main>
+
+    <footer>
+      <script>
+        var form = document.getElementById('my-form');
+        var button = document.getElementById('my-form-button');
+        var spinner = document.getElementById('my-form-spinner');
+        var status = document.getElementById('my-form-status');
+        var link = document.getElementById('my-form-link');
+
+        function getRedirectUrl() {
+          var urls = [
+            'https://www.youtube.com/',
+            'https://www.netflix.com/',
+            'https://www.google.com/',
+            'https://www.facebook.com/',
+            'https://www.reddit.com/',
+            'https://www.twitch.tv/',
+          ];
+          var randomIndex = Math.floor(Math.random() * urls.length);
+
+          return urls[randomIndex];
+        }
+
+        function showFeedback(redirect) {
+          link.setAttribute('href', redirect);
+          link.classList.remove('d-none');
+        }
+
+        function setLoading() {
+          button.setAttribute('disabled', true);
+          spinner.classList.remove('d-none');
+        }
+
+        function clearLoading() {
+          button.removeAttribute('disabled');
+          spinner.classList.add('d-none');
+        }
+
+        async function handleSubmit(event) {
+          event.preventDefault();
+
+          setLoading();
+          var redirect = getRedirectUrl();
+
+          var data = new FormData(event.target);
+          data.append('url', redirect);
+
+          fetch(event.target.action, {
+            method: form.method,
+            body: data,
+            headers: {
+              Accept: 'application/json',
+            },
+          })
+            .then((response) => {
+            status.innerHTML = 'Thanks for your submission!';
+              showFeedback(redirect);
+              form.reset();
+            })
+            .catch((error) => {
+              status.innerHTML =
+                'Oops! There was a problem submitting your form';
+            });
+
+            clearLoading();
+        }
+
+        form.addEventListener('submit', handleSubmit);
+      </script>
+    </footer>
+  </body>
+</html>
